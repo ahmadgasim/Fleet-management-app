@@ -1,0 +1,3 @@
+DriverId,FullName,Phone,Email,VanId,Active,Availability
+DR-001,Mike Driver,5559990001,mike@company.com,VAN-001,true,Available
+DR-002,Nora Driver,5559990002,nora@company.com,VAN-002,true,Available

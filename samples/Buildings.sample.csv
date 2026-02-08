@@ -1,0 +1,4 @@
+BuildingId,Name,Zone,Active
+BLD-001,Main Gate,A,true
+BLD-002,Admin Block,A,true
+BLD-003,Warehouse,B,true

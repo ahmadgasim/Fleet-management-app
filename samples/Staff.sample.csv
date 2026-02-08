@@ -1,0 +1,3 @@
+StaffId,FullName,Phone,Email,BuildingId,Active
+ST-001,Alice Morgan,5551112222,alice@company.com,BLD-002,true
+ST-002,David Lee,5553334444,david@company.com,BLD-001,true
