@@ -53,8 +53,8 @@ Before building screens, insert sample rows:
 1. Go to Power Apps -> **Create** -> **Canvas app from blank**.
 2. Name the app `FleetMovement`.
 3. Add Excel data connections to the workbook tables.
-4. Add global app variables in `App.OnStart`:
-   - `gRole`, `gStaff`, `gDriver`, `gIsAdmin`.
+4. Add global app variables in `App.OnStart` using the naming convention in `docs/powerapps-formulas.md`:
+   - `gblRole`, `gblCurrentStaff`, `gblCurrentDriver`, `gblIsAdmin`, `gblCurrentRequest`, `gblRequestId`.
 
 Use these screen specs and formulas while building:
 - Screen layout and behavior: `docs/powerapps-screens.md`

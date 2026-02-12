@@ -11,8 +11,9 @@ Suggested Canvas Layout
   3) StaffHome
   4) NewRequest
   5) DriverHome
-  6) RequestDetail
-  7) AdminHome
+  6) RequestQueue
+  7) RequestDetail
+  8) AdminHome
 
 Control Map
 Login
@@ -38,6 +39,13 @@ NewRequest
 DriverHome
 - ddAvailability
 - galAssignedRequests
+- btnOpenQueue
+
+RequestQueue
+- galOpenRequests
+- btnAssignToMe
+- ddAssignDriver
+- btnAssignDriver
 
 RequestDetail
 - lblPickup
