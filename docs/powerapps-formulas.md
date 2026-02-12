@@ -124,8 +124,8 @@ If(
                 StaffId: "ST-" & Text(Now(), "yyyymmddhhmmss"),
                 FullName: Trim(txtName.Text),
                 Phone: Trim(txtPhone.Text),
-                Email: Trim(txtEmail.Text),
-                BuildingId: ddHomeBuilding.Selected.BuildingId,
+                Email: If(IsBlank(Trim(txtEmail.Text)), Blank(), Trim(txtEmail.Text)),
+                BuildingId: If(IsBlank(ddHomeBuilding.Selected), Blank(), ddHomeBuilding.Selected.BuildingId),
                 Active: true
             }
         );
@@ -184,6 +184,8 @@ Filter(Buildings, Active = true)
 If(
     IsBlank(ddPickup.Selected.BuildingId) || IsBlank(ddDestination.Selected.BuildingId),
     Notify("Select pickup and destination.", NotificationType.Error),
+    ddPickup.Selected.BuildingId = ddDestination.Selected.BuildingId,
+    Notify("Pickup and destination must be different.", NotificationType.Error),
 
     Set(gblRequestId, "RR-" & Text(Now(), "yyyymmddhhmmss"));
 
@@ -288,10 +290,12 @@ gblIsAdmin
 ### `btnAssignToMe.OnSelect`
 ```powerfx
 If(
-    ThisItem.Status = "Requested" && !IsBlank(gblCurrentDriver),
+    !IsBlank(galOpenRequests.Selected) &&
+        galOpenRequests.Selected.Status = "Requested" &&
+        !IsBlank(gblCurrentDriver),
     Patch(
         RideRequests,
-        ThisItem,
+        galOpenRequests.Selected,
         {
             Status: "Assigned",
             AssignedDriverId: gblCurrentDriver.DriverId,
@@ -308,10 +312,13 @@ If(
 ### `btnAssignDriver.OnSelect` (admin)
 ```powerfx
 If(
-    gblIsAdmin && ThisItem.Status = "Requested" && !IsBlank(ddAssignDriver.Selected.DriverId),
+    gblIsAdmin &&
+        !IsBlank(galOpenRequests.Selected) &&
+        galOpenRequests.Selected.Status = "Requested" &&
+        !IsBlank(ddAssignDriver.Selected.DriverId),
     Patch(
         RideRequests,
-        ThisItem,
+        galOpenRequests.Selected,
         {
             Status: "Assigned",
             AssignedDriverId: ddAssignDriver.Selected.DriverId,
@@ -340,12 +347,18 @@ If(IsBlank(gblCurrentRequest), Back())
 ### Labels
 - `lblPickup.Text`
 ```powerfx
-gblCurrentRequest.PickupBuildingId
+Coalesce(
+    LookUp(Buildings, BuildingId = gblCurrentRequest.PickupBuildingId).Name,
+    gblCurrentRequest.PickupBuildingId
+)
 ```
 
 - `lblDestination.Text`
 ```powerfx
-gblCurrentRequest.DestinationBuildingId
+Coalesce(
+    LookUp(Buildings, BuildingId = gblCurrentRequest.DestinationBuildingId).Name,
+    gblCurrentRequest.DestinationBuildingId
+)
 ```
 
 ### Buttons
@@ -376,11 +389,6 @@ Notify("Request cancelled", NotificationType.Warning)
 ## Screen: AdminHome
 
 ### Access gating
-- `AdminHome.Visible`
-```powerfx
-gblIsAdmin
-```
-
 - `AdminHome.OnVisible`
 ```powerfx
 If(!gblIsAdmin, Notify("Admin access only", NotificationType.Error); Back())

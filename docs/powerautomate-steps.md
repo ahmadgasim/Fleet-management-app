@@ -1,5 +1,8 @@
 # Power Automate Step-by-Step (with expressions)
 
+Notes
+- Table names and status values are case-sensitive. Use: `Requested`, `Assigned`, `Enroute`, `Completed`, `Cancelled`.
+
 Flow 1: Notify Available Drivers
 Trigger
 - Power Apps (V2)

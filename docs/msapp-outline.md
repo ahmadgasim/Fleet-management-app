@@ -2,6 +2,7 @@
 
 Note
 - A true .msapp file must be exported from Power Apps Studio. This file provides a build outline you can follow to assemble an importable app quickly.
+- Control names below match `docs/powerapps-formulas.md` for copy/paste.
 
 Suggested Canvas Layout
 - App name: FleetMovement
@@ -18,7 +19,8 @@ Suggested Canvas Layout
 Control Map
 Login
 - txtPhone
-- btnLookup
+- btnStaffLogin
+- btnDriverLogin
 - lblError
 
 StaffRegister

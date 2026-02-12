@@ -53,6 +53,11 @@ Table: NotificationsLog
 - Response (text: Accepted, Declined, Timeout)
 - ResponseTime (datetime, optional)
 
+Table: Admins (optional but recommended)
+- AdminId (text, unique) e.g. ADM-001
+- StaffId (text, unique)
+- Active (yes/no)
+
 Notes
 - Use Data Validation in Excel for choice fields where possible.
 - Keep all tables in a single workbook to simplify connectors.

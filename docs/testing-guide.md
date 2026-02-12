@@ -71,7 +71,9 @@ This project is a specification for a **Power Apps + Power Automate + Excel** so
 - Staff can only see their own request history.
 - Drivers only see requests assigned to them.
 - Cancel flow updates request to `Cancelled` and does not send completion push.
-- If no drivers are `Available`, request remains `Requested` and logs timeouts/declines.
+- If no drivers are `Available`, decide the expected behavior and test it:
+  - Recommended: keep request `Requested` and log timeouts/declines in `NotificationsLog` (so an admin can assign later).
+  - Alternative: after a timeout window, update request to `Cancelled` and notify staff.
 - Invalid phone number should not create duplicate Staff rows when an existing phone exists.
 
 ## 4) Debugging Tips

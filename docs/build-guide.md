@@ -52,7 +52,7 @@ Before building screens, insert sample rows:
 
 1. Go to Power Apps -> **Create** -> **Canvas app from blank**.
 2. Name the app `FleetMovement`.
-3. Add Excel data connections to the workbook tables.
+3. Add Excel data connections to the workbook tables (and `Admins` if you use admin gating).
 4. Add global app variables in `App.OnStart` using the naming convention in `docs/powerapps-formulas.md`:
    - `gblRole`, `gblCurrentStaff`, `gblCurrentDriver`, `gblIsAdmin`, `gblCurrentRequest`, `gblRequestId`.
 
@@ -79,7 +79,7 @@ Use these screen specs and formulas while building:
    - Driver `Assign to me`.
    - Admin `Assign to driver`.
 7. **Request Detail**
-   - Buttons: `Enroute`, `Completed`, `Cancel`.
+   - Buttons: `Enroute`, `Completed`, `Cancelled`.
 8. **Admin Home**
    - CRUD for Buildings, Staff, Drivers, Vans, Requests.
 
@@ -104,16 +104,16 @@ Use these docs while building:
 
 In Power Apps, add your dispatch flow to the app and call it when submitting a new request:
 
-`NotifyDriversFlow.Run(varReqId, ddPickup.Selected.BuildingId, ddDestination.Selected.BuildingId, txtNotes.Text)`
+`NotifyDriversFlow.Run(gblRequestId, ddPickup.Selected.BuildingId, ddDestination.Selected.BuildingId, Trim(txtNotes.Text))`
 
-Confirm the flow name in Power Apps exactly matches your created flow connection.
+Tip: In Power Apps, the flow name used in formulas must match the connection name (for these docs: `NotifyDriversFlow`).
 
 ## Step 7: Add admin role gating (recommended)
 
 If using the `Admins` table:
 
-- Set `gIsAdmin` after login by checking `Admins` membership.
-- Hide/disable admin-only UI when `gIsAdmin = false`.
+- Set `gblIsAdmin` after login by checking `Admins` membership.
+- Hide/disable admin-only UI when `gblIsAdmin = false`.
 - Optionally block direct navigation to admin screens.
 
 Reference: `docs/admin-role-model.md`.
@@ -125,7 +125,7 @@ After building, run the manual checklist in `docs/testing-guide.md`.
 Minimum success path:
 1. Staff submits request.
 2. Driver receives push and accepts.
-3. Request updates to Assigned/Enroute/Completed.
+3. Request updates `Requested -> Assigned -> Enroute -> Completed`.
 4. Staff receives completion push.
 
 ## Common build blockers

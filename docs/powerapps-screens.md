@@ -1,55 +1,61 @@
 # Power Apps Screens
 
-App Name: FleetMovement
+App name: `FleetMovement`
 
-Data Connections
-- Excel workbook with tables: Buildings, Staff, Drivers, Vans, RideRequests, NotificationsLog.
+These screen specs match:
+- Screen order in `docs/msapp-outline.md`
+- Copy/paste code in `docs/powerapps-formulas.md`
+- Status values in `docs/excel-schema.md`
 
-Security
-- Simple role handling: Admin flag in Staff table or separate Admins table.
-- Filter visibility by role in app logic.
+## Data connections
+- Single Excel workbook with tables: `Buildings`, `Staff`, `Drivers`, `Vans`, `RideRequests`, `NotificationsLog`
+- Optional (recommended): `Admins` table for admin access
 
-Screens
+## Security & roles (recommended)
+- Role is derived at runtime:
+  - Staff login sets `gblRole = "Staff"`
+  - Driver login sets `gblRole = "Driver"`
+  - Admin access sets `gblIsAdmin = true` when the logged-in staff member exists in `Admins`
+- Gate admin UI with `gblIsAdmin` and avoid direct navigation to admin screens for non-admins.
 
-1. Login or Identify
-- Input: Phone number.
-- Lookup Staff by Phone.
-- If not found, show registration screen.
+## Screens (build in this order)
 
-2. Staff Registration
-- Inputs: FullName, Phone, Email (optional), Home Building (optional).
-- Creates row in Staff table with Active = true.
+1. **Login**
+   - Input: phone number
+   - Staff login button: looks up `Staff` and navigates to `StaffRegister` if not found
+   - Driver login button: looks up `Drivers` and navigates to `DriverHome` if found
 
-3. Staff Home
-- Button: New Ride Request.
-- List: My recent requests with status.
+2. **StaffRegister**
+   - Inputs: full name, phone, email (optional), home building (optional)
+   - Creates a new `Staff` row with `Active = true`
 
-4. New Ride Request
-- Dropdown: PickupBuilding (Buildings where Active = true).
-- Dropdown: DestinationBuilding (Buildings where Active = true).
-- Text input: Notes.
-- Submit button: Creates row in RideRequests with Status = Requested.
-- On submit: Trigger Power Automate flow to notify drivers.
+3. **StaffHome**
+   - Shows the logged-in staff member’s request history
+   - Button: **New Ride Request**
 
-5. Driver Home
-- Shows driver status (Available/Busy/Off).
-- Toggle or dropdown to set Availability in Drivers table.
-- List of assigned requests.
+4. **NewRequest**
+   - Select pickup + destination buildings (active only)
+   - Submit creates a new `RideRequests` row with `Status = "Requested"`
+   - Calls the dispatch flow `NotifyDriversFlow.Run(...)`
 
-5a. Request Queue (Driver/Admin)
-- Gallery: open requests where Status = "Requested"
-- Button: "Assign to me" (driver)
-- Admin-only button: "Assign to driver" (dropdown of available drivers)
+5. **DriverHome**
+   - Shows driver availability (Available/Busy/Off) and assigned requests
+   - Button: **Open Queue** (for manual assignment / admin view)
 
-6. Request Detail (Driver)
-- Shows Request info.
-- Buttons: Enroute, Completed, Cancel (update Status and time fields).
+6. **RequestQueue** (Driver/Admin)
+   - Gallery: open requests (`Status = "Requested"`)
+   - Driver action: **Assign to me** (sets request to `Assigned`, sets driver to Busy)
+   - Admin action: **Assign to driver** (pick an available driver)
 
-7. Admin Home
-- Tabs: Buildings, Staff, Drivers, Vans, Requests.
-- CRUD forms for each table.
+7. **RequestDetail**
+   - Shows request details (pickup/destination/notes/status)
+   - Buttons: Enroute, Completed, Cancelled
 
-Data Logic Hints
-- Use Patch() to insert/update.
-- Use Filter() with StaffId or DriverId to show relevant records.
-- For RequestId, use: "RR-" & Text(Now(), "yyyymmddhhmmss")
+8. **AdminHome**
+   - Admin-only management UI
+   - Tabs (example): Buildings, Staff, Drivers, Vans, Requests, Admins
+
+## Data logic hints
+- Use `Patch()` to insert/update records.
+- Always filter lists by the logged-in user (`StaffId` / `DriverId`) unless admin.
+- Status values are case-sensitive; use: `Requested`, `Assigned`, `Enroute`, `Completed`, `Cancelled`.

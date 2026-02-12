@@ -21,3 +21,10 @@ Assumptions
 - Excel tables are stored in OneDrive for Business or SharePoint.
 - Power Apps and Power Automate have access to the same Excel file.
 - Staff and drivers are uniquely identified by phone number and/or email.
+- Admin access is managed via an optional `Admins` table (recommended).
+
+Next steps
+- First-time setup: `docs/build-guide.md`
+- App screens + controls: `docs/msapp-outline.md` and `docs/powerapps-screens.md`
+- Copy/paste Power Fx: `docs/powerapps-formulas.md`
+- Flows: `docs/powerautomate-flows.md` and `docs/powerautomate-steps.md`
